@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 var hbs = require('hbs');
+var cors = require('cors');
 require('./app_api/models/db');
 
 const indexRouter = require('./app_server/routes/index');
@@ -12,6 +13,8 @@ const travelRouter = require('./app_server/routes/travel');
 const apiRouter = require('./app_api/routes/index');
 
 var app = express();
+
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
@@ -26,6 +29,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//allow CORS
+app.use('/api', (req, res, next) => {
+  console.log("made it to headers ");
+  //res.header("Access-Control-Allow-Origin:", "*");
+  //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  //res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  console.log("&*&*&*&")
+  console.log(res.headers);
+  console.log(res.headersSent);
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
